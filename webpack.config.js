@@ -2,17 +2,24 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   context: __dirname,
-  entry: './src/index.js',
+  entry: './src/newGoodIndex.js',
   output: {
     filename: '[name].js',
     publicPath: '/'
   },
+
+  devtool:"source-map",
+
   module: {
     loaders:[
       {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
       }
     ]
   },
@@ -27,7 +34,7 @@ module.exports = {
     new HtmlWebpackPlugin ({
       template: './src/public/index.html'
     })
-  ],
-  watch: true
+  ]
+  // watch: true
 
 }
