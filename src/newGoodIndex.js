@@ -15,52 +15,39 @@ const autocomplete = (countries, nowInput) => (
   countries.filter((item)=>filterFunc(item, nowInput))
 );
 
-const allOffer = (arrayAnswer = []) => {
-  arrayAnswer.map(item => {
-    let elem  = document.createElement('li');
-    elem.addEventListener('click', (e)=> {
-    input.value = e.target.textContent;
-    })
-    let content = document.createTextNode(item);
-    result.setAttribute("style", "height: 300px;overflow: auto;width: 200px;");
-    elem.appendChild(content);
-    result.appendChild(elem);
+const addChild = (item) => {
+  let elem  = document.createElement('li');
+  elem.addEventListener('click', (e)=> {
+  input.value = e.target.textContent;
   });
+  let content = document.createTextNode(item);
+  elem.appendChild(content);
+  result.appendChild(elem);
+  result.setAttribute("style", "height: 300px;overflow: auto;width: 200px;");
 };
 
-const onHangEvent = (arrayLi=[]) => {
-
+const createEmptyAnswer = () => {
+  let elem  = document.createElement('p');
+  let content = document.createTextNode("Нет совпадений");
+  elem.appendChild(content);
+  result.appendChild(elem);
+  input.style.borderColor = 'red';
 }
+
+const allOffer = (arrayAnswer = []) => {
+  arrayAnswer.map(item => addChild(item));
+};
 
 const getOffer = (arrayAnswer = [], wordStart=[]) => {
   input.style.borderColor = '';
   if(arrayAnswer.length > 5 )
-    arrayAnswer.slice(0, 5).map(item => {
-    let elem  = document.createElement('li');
-    elem.addEventListener('click', (e)=> {
-    input.value = e.target.textContent;
-  })
-    let content = document.createTextNode(item);
-    elem.appendChild(content);
-    result.appendChild(elem);
-  }
-  );
+    arrayAnswer.slice(0, 5).map(item =>addChild(item));
+
   else if(arrayAnswer.length <=5 && arrayAnswer.length > 0 )
-    arrayAnswer.map(item => {
-      let elem  = document.createElement('li');
-      elem.addEventListener('click', (e)=> {
-        input.value = e.target.textContent;
-      })
-      let content = document.createTextNode(item);
-      elem.appendChild(content);
-      result.appendChild(elem);
-    });
+    arrayAnswer.map(item => addChild(item));
+
   else if(arrayAnswer.length === 0 && wordStart.length > 0) {
-    let elem  = document.createElement('p');
-    let content = document.createTextNode("Нет совпадений");
-    elem.appendChild(content);
-    result.appendChild(elem);
-    input.style.borderColor = 'red';
+    createEmptyAnswer();
   }
 };
 
@@ -73,15 +60,9 @@ const clear = () => {
 const input = document.getElementById("autocomplete");
 const result = document.getElementById("result");
 
-
-input.oninput = (e) => {
+input.addEventListener('input', (e) => {
   clear();
   const word = e.target.value;
-  getOffer();
-
   const arrayAnswer = autocomplete(countries, word.toLowerCase());
-
   if( word.length > 0) getOffer(arrayAnswer, word); else allOffer(countries);
-
-  onHangEvent(result.children);
-}
+})
